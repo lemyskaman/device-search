@@ -1,0 +1,63 @@
+#! /bin/bash
+
+
+
+if [ ! $(which curl) ]; then
+    echo 'Please install curl package'
+    exit 1
+fi
+
+
+if [ ! $(which curl) ]; then
+    echo 'Please install curl package'
+    exit 1
+fi
+
+
+requester(){
+
+    #request_ip=$SAME_NETWORK.$i
+    request_ip=$1
+    echo $request_ip 
+    REQUEST=$(curl --max-time 0,1 -s $request_ip:7777)
+    if [[ ! -z $REQUEST ]]; then 
+        KDEVICE_HOSTNAME=$(echo $REQUEST | sed -n 's|.*"hostname":"\([^"]*\)".*|\1|p')
+        echo "Kdevice found at: $TEST_IP - $KDEVICE_HOSTNAME"
+        
+    #else
+    fi
+
+    
+
+}
+
+THIS_DEVICE_IP=$(ifconfig | grep -Eo 'inet (addr:)?([0-9]*\.){3}[0-9]*' | grep -Eo '([0-9]*\.){3}[0-9]*' | grep -v '127.0.0.1')
+
+
+echo $THIS_DEVICE_IP
+read W X Y Z <<<"${THIS_DEVICE_IP//./ }"
+NETWORK_SEGMENT="$W.$X.$Y"
+echo "$NETWORK_SEGMENT"
+
+
+
+#try with the ones after this device ip
+for i in $( seq $(( $Z + 1 )) 255  )
+do
+       TEST_IP="$NETWORK_SEGMENT.$i" 
+       requester $TEST_IP
+
+done
+
+
+#try with the ones befor this device ip
+for i in $( seq 0 $(( $Z - 1 ))  )
+do
+       TEST_IP="$NETWORK_SEGMENT.$i" 
+       requester $TEST_IP
+done
+
+
+
+
+
