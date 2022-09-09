@@ -11,7 +11,11 @@ Fisrt grab a copy of the project
 
     $ git clone https://github.com/lemyskaman/kdevice-gabbler.git
 
-You must have curl installed, then just run the script as any other executable file
+ then get in the project folder
+
+    $ cd kdevice-gabbler
+
+Then if you have **curl** installed just run the script as any other executable file
 
     $ ./kdevice-gabbler-finder
 
