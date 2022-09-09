@@ -15,7 +15,7 @@ requester(){
     #request_ip=$SAME_NETWORK.$i
     request_ip=$1
     #echo $request_ip 
-    REQUEST=$(curl --max-time 0,1 -s $request_ip:7777)
+    REQUEST=$(curl --max-time 1 -s $request_ip:7777)
     if [[ ! -z $REQUEST ]]; then 
         KDEVICE_HOSTNAME=$(echo $REQUEST | sed -n 's|.*"hostname":"\([^"]*\)".*|\1|p')
         echo "Kdevice found:  $KDEVICE_HOSTNAME"
