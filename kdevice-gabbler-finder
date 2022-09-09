@@ -8,10 +8,6 @@ if [ ! $(which curl) ]; then
 fi
 
 
-if [ ! $(which curl) ]; then
-    echo 'Please install curl package'
-    exit 1
-fi
 
 
 requester(){
