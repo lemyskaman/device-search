@@ -18,11 +18,13 @@ requester(){
 
     #request_ip=$SAME_NETWORK.$i
     request_ip=$1
-    echo $request_ip 
-    REQUEST=$(curl --max-time 0,1 -s $request_ip:7777)
+    #echo $request_ip 
+    REQUEST=$(curl --max-time 0,05 -s $request_ip:7777)
     if [[ ! -z $REQUEST ]]; then 
         KDEVICE_HOSTNAME=$(echo $REQUEST | sed -n 's|.*"hostname":"\([^"]*\)".*|\1|p')
-        echo "Kdevice found at: $TEST_IP - $KDEVICE_HOSTNAME"
+        echo "Kdevice found:  $KDEVICE_HOSTNAME"
+        echo "$TEST_IP"
+        echo ""
         
     #else
     fi
@@ -33,14 +35,15 @@ requester(){
 
 THIS_DEVICE_IP=$(ifconfig | grep -Eo 'inet (addr:)?([0-9]*\.){3}[0-9]*' | grep -Eo '([0-9]*\.){3}[0-9]*' | grep -v '127.0.0.1')
 
-
-echo $THIS_DEVICE_IP
+echo "Search starts right now and will ends with a message"
+echo "This device local ip: $THIS_DEVICE_IP"
 read W X Y Z <<<"${THIS_DEVICE_IP//./ }"
 NETWORK_SEGMENT="$W.$X.$Y"
-echo "$NETWORK_SEGMENT"
+#echo "$NETWORK_SEGMENT"
 
 
-
+echo "Searching..."
+echo ""
 #try with the ones after this device ip
 for i in $( seq $(( $Z + 1 )) 255  )
 do
@@ -57,7 +60,7 @@ do
        requester $TEST_IP
 done
 
-
+echo "Search is over !"
 
 
 
