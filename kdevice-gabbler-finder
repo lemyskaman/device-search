@@ -22,8 +22,8 @@ fi
 CURL_MAX_TIME=0,1
 OS=$(uname)
 #echo $OS
-if [ $OS="Darwing" ]; then 
-    CURL_MAX_TIME=0,1
+if [ $OS="Darwin" ]; then 
+    CURL_MAX_TIME=0.1
 fi
 #echo $CURL_MAX_TIME
 
