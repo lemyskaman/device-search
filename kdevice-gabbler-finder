@@ -1,38 +1,64 @@
 #! /bin/bash
 
 
-
 if [ ! $(which curl) ]; then
     echo 'Please install curl package'
     exit 1
 fi
 
 
+if [ -z  $1 ]; then
+    echo 'PLease pass a network interface name as first param.'
+    echo "The command ifconfig might come handy"
+    exit 1
+fi
+
+ifconfig $1
+if [ $? -gt 0  ]; then
+    echo "$1 is not a valid network interface name for this thevice."
+    exit
+fi
+
+CURL_MAX_TIME=0,1
+OS=$(uname)
+#echo $OS
+if [ $OS="Darwing" ]; then 
+    CURL_MAX_TIME=0,1
+fi
+#echo $CURL_MAX_TIME
 
 
 requester(){
-
     #request_ip=$SAME_NETWORK.$i
     request_ip=$1
     #echo $request_ip 
-    REQUEST=$(curl --max-time 1 -s $request_ip:7777)
+    REQUEST=$(curl --max-time $CURL_MAX_TIME -s $request_ip:7777)
     if [[ ! -z $REQUEST ]]; then 
         KDEVICE_HOSTNAME=$(echo $REQUEST | sed -n 's|.*"hostname":"\([^"]*\)".*|\1|p')
         echo "Kdevice found:  $KDEVICE_HOSTNAME"
         echo "$TEST_IP"
         echo ""
-        
+        echo "Searching..." 
+        echo ""
     #else
     fi
-
-    
-
 }
 
-THIS_DEVICE_IP=$(ifconfig | grep -Eo 'inet (addr:)?([0-9]*\.){3}[0-9]*' | grep -Eo '([0-9]*\.){3}[0-9]*' | grep -v '127.0.0.1')
 
-echo "Search starts right now and will ends with a message"
-echo "This device local ip: $THIS_DEVICE_IP"
+
+
+#this was an atempt to get the ip automatically exlcluding virtual interfaces 
+#THIS_DEVICE_IP=$(ifconfig | grep -Eo 'inet (addr:)?([0-9]*\.){3}[0-9]*' | grep -Eo '([0-9]*\.){3}[0-9]*' | grep -v '127.0.0.1' | grep -v '172.17.0.1')
+
+
+
+THIS_DEVICE_IP=$(ifconfig $1 | grep -Eo 'inet (addr:)?([0-9]*\.){3}[0-9]*' | grep -Eo '([0-9]*\.){3}[0-9]*' | grep -v '127.0.0.1' )
+
+
+
+
+echo "Search starts right now, for above iterface network "
+#echo "This device local ip: $THIS_DEVICE_IP"
 read W X Y Z <<<"${THIS_DEVICE_IP//./ }"
 NETWORK_SEGMENT="$W.$X.$Y"
 #echo "$NETWORK_SEGMENT"
@@ -56,7 +82,7 @@ do
        requester $TEST_IP
 done
 
-echo "Search is over !"
+echo "Search is over!  only above items found."
 
 
 
