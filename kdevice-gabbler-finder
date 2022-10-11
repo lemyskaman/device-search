@@ -19,11 +19,12 @@ if [ $? -gt 0  ]; then
     exit
 fi
 
-CURL_MAX_TIME=0,1
+CURL_MAX_TIME=0.1
 OS=$(uname)
-#echo $OS
+echo $CURL_MAX_TIME
+echo $OS
 if [ $OS="Darwin" ]; then 
-    CURL_MAX_TIME=0.1
+    CURL_MAX_TIME=0,1
 fi
 #echo $CURL_MAX_TIME
 
