@@ -8,8 +8,11 @@ fi
 
 
 if [ -z  $1 ]; then
-    echo 'PLease pass a network interface name as first param.'
-    echo "The command ifconfig might come handy"
+    ip address
+    echo ""
+    echo 'PLease select a network interface from the above list ad pass it name  as first param.'
+    echo "example:"
+    echo "$ ./kdevice-gabbler-finder eth0"
     exit 1
 fi
 
