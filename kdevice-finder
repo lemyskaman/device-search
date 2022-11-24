@@ -1,13 +1,12 @@
 #! /bin/bash
 
-
+# shellcheck disable=SC2046
 if [ ! $(which curl) ]; then
     echo 'Please install curl package'
     exit 1
 fi
 
-
-if [ -z  $1 ]; then
+if [ -z  "$1" ]; then
     ip address
     echo ""
     echo 'PLease select a network interface from the above list ad pass it name  as first param.'
@@ -16,8 +15,8 @@ if [ -z  $1 ]; then
     exit 1
 fi
 
-ifconfig $1
-if [ $? -gt 0  ]; then
+
+if ! ip a s  "$1"; then
     echo "$1 is not a valid network interface name for this thevice."
     exit
 fi
@@ -33,9 +32,7 @@ fi
 
 
 requester(){
-    #request_ip=$SAME_NETWORK.$i
     request_ip=$1
-    #echo $request_ip 
     REQUEST=$(curl --max-time $CURL_MAX_TIME -s $request_ip:7777)
     if [[ ! -z $REQUEST ]]; then 
         KDEVICE_HOSTNAME=$(echo $REQUEST | sed -n 's|.*"hostname":"\([^"]*\)".*|\1|p')
@@ -44,6 +41,7 @@ requester(){
         echo ""
         echo "Searching..." 
         echo ""
+        return 0
     #else
     fi
 }
@@ -52,11 +50,11 @@ requester(){
 
 
 #this was an atempt to get the ip automatically exlcluding virtual interfaces 
-#THIS_DEVICE_IP=$(ifconfig | grep -Eo 'inet (addr:)?([0-9]*\.){3}[0-9]*' | grep -Eo '([0-9]*\.){3}[0-9]*' | grep -v '127.0.0.1' | grep -v '172.17.0.1')
+#THIS_DEVICE_IP=$(ip a s  | grep -Eo 'inet (addr:)?([0-9]*\.){3}[0-9]*' | grep -Eo '([0-9]*\.){3}[0-9]*' | grep -v '127.0.0.1' | grep -v '172.17.0.1')
 
 
 
-THIS_DEVICE_IP=$(ifconfig $1 | grep -Eo 'inet (addr:)?([0-9]*\.){3}[0-9]*' | grep -Eo '([0-9]*\.){3}[0-9]*' | grep -v '127.0.0.1' )
+THIS_DEVICE_IP=$(ip a s  $1 | grep -Eo 'inet (addr:)?([0-9]*\.){3}[0-9]*' | grep -Eo '([0-9]*\.){3}[0-9]*' | grep -v '127.0.0.1' )
 
 
 
